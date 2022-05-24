@@ -1,0 +1,35 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Sign Up" %}</h1>
+
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+
+  {# ココが通常のユーザーモデルのフォーム #}
+  {{ form.as_p }}
+
+
+  {# ココが質問者モデル・回答者モデルのフォーム。クエリストリングで分岐させる #}
+
+  {% if request.GET.answer %}
+  <input type="text" name="company" placeholder="所属会社" maxlength="200" required>
+  {% else %}
+  <input type="text" name="seriousness" placeholder="購入の本気度" maxlength="200" required>
+  {% endif %}
+
+
+
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
+
+{% endblock %}
